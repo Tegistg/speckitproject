@@ -1,0 +1,275 @@
+openapi: "3.1.0"
+info:
+  title: Dorm Snack Marketplace – Listings API
+  version: "1.0"
+
+paths:
+  /listings:
+    get:
+      summary: Browse listings feed
+      description: Returns all active listings. Supports keyword search and filters. FR-003, FR-004.
+      parameters:
+        - name: q
+          in: query
+          description: Full-text keyword search against title and description
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [savory, sweet, drinks, snacks, other]
+        - name: min_price_cents
+          in: query
+          schema:
+            type: integer
+        - name: max_price_cents
+          in: query
+          schema:
+            type: integer
+        - name: cursor
+          in: query
+          description: Pagination cursor (opaque, from previous response)
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 50
+      responses:
+        "200":
+          description: Paginated list of active listings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ListingCard"
+                  next_cursor:
+                    type: string
+                    nullable: true
+
+    post:
+      summary: Create a listing
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListingInput"
+      responses:
+        "201":
+          description: Listing created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "422":
+          description: Validation error (missing title, price <= 0, etc.)
+
+  /listings/{id}:
+    get:
+      summary: Get listing detail
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "404":
+          description: Listing not found or removed
+
+    patch:
+      summary: Update a listing (seller only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListingPatch"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "403":
+          description: Not the listing's seller
+        "404":
+          description: Listing not found
+
+    delete:
+      summary: Remove a listing (seller only). Cancels all pending orders.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "204":
+          description: Listing removed
+        "403":
+          description: Not the listing's seller
+
+  /listings/{id}/photo:
+    post:
+      summary: Upload or replace listing photo
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [photo]
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Photo uploaded; returns updated listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "413":
+          description: File too large (max 5 MB)
+        "415":
+          description: Unsupported media type (JPEG/PNG only)
+
+components:
+  schemas:
+    ListingCard:
+      type: object
+      description: Compact listing representation for feed display
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        price_cents:
+          type: integer
+        category:
+          type: string
+        status:
+          type: string
+        photo_url:
+          type: string
+          nullable: true
+        seller:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            avg_rating:
+              type: number
+              nullable: true
+
+    Listing:
+      allOf:
+        - $ref: "#/components/schemas/ListingCard"
+        - type: object
+          properties:
+            description:
+              type: string
+              nullable: true
+            quantity:
+              type: integer
+            accepted_payment_methods:
+              type: array
+              items:
+                type: string
+                enum: [cash, stripe]
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    ListingInput:
+      type: object
+      required: [title, price_cents, quantity, category]
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          nullable: true
+        price_cents:
+          type: integer
+          minimum: 1
+        quantity:
+          type: integer
+          minimum: 0
+        category:
+          type: string
+          enum: [savory, sweet, drinks, snacks, other]
+        accepted_payment_methods:
+          type: array
+          items:
+            type: string
+            enum: [cash, stripe]
+          default: [cash, stripe]
+          minItems: 1
+
+    ListingPatch:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          nullable: true
+        price_cents:
+          type: integer
+          minimum: 1
+        quantity:
+          type: integer
+          minimum: 0
+        category:
+          type: string
+          enum: [savory, sweet, drinks, snacks, other]
+        accepted_payment_methods:
+          type: array
+          items:
+            type: string
+            enum: [cash, stripe]
+          minItems: 1
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

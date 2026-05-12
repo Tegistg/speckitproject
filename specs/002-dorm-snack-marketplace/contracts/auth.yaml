@@ -1,0 +1,136 @@
+openapi: "3.1.0"
+info:
+  title: Dorm Snack Marketplace – Auth API
+  version: "1.0"
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Creates an account. Email must match the configured university domain. Triggers email verification.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, name]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: student@university.edu
+                password:
+                  type: string
+                  minLength: 8
+                name:
+                  type: string
+                  minLength: 1
+      responses:
+        "201":
+          description: Account created; verification email sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "409":
+          description: Email already registered
+        "422":
+          description: Email domain not permitted or validation error
+
+  /auth/login:
+    post:
+      summary: Log in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+        "403":
+          description: Email not yet verified
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        "200":
+          description: New access token issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Refresh token invalid or expired
+
+  /auth/logout:
+    post:
+      summary: Log out (invalidate refresh token)
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Logged out
+
+components:
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer
+          description: Access token TTL in seconds
+        user:
+          $ref: "#/components/schemas/UserSummary"
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        name:
+          type: string
+        avg_rating:
+          type: number
+          nullable: true
+        completed_transaction_count:
+          type: integer
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
