@@ -1,0 +1,161 @@
+// Prisma schema — Dorm Snack Marketplace
+// Entities defined per data-model.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ListingCategory {
+  savory
+  sweet
+  drinks
+  snacks
+  other
+}
+
+enum ListingStatus {
+  active
+  sold_out
+  removed
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  ready_for_pickup
+  completed
+  cancelled
+  disputed
+}
+
+enum CancelReason {
+  buyer_changed_mind
+  buyer_unavailable
+  seller_rejected
+  seller_timeout
+  listing_removed
+  other
+}
+
+enum DisputeReason {
+  item_not_received
+  item_not_as_described
+  no_show_buyer
+  no_show_seller
+  other
+}
+
+enum PaymentMethod {
+  cash
+  stripe
+}
+
+enum PaymentStatus {
+  not_applicable
+  authorized
+  captured
+  refunded
+  voided
+}
+
+model User {
+  id                        String    @id @default(uuid())
+  email                     String    @unique
+  name                      String
+  avatarUrl                 String?
+  stripeAccountId           String?
+  expoPushToken             String?
+  avgRating                 Decimal?  @db.Decimal(3, 2)
+  completedTransactionCount Int       @default(0)
+  isActive                  Boolean   @default(true)
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+
+  listings       Listing[] @relation("SellerListings")
+  buyerOrders    Order[]   @relation("BuyerOrders")
+  sellerOrders   Order[]   @relation("SellerOrders")
+  ratingsGiven   Rating[]  @relation("RatingsGiven")
+  ratingsReceived Rating[] @relation("RatingsReceived")
+
+  @@map("users")
+}
+
+model Listing {
+  id                     String          @id @default(uuid())
+  sellerId               String
+  title                  String
+  description            String?
+  priceCents             Int
+  quantity               Int
+  category               ListingCategory
+  status                 ListingStatus   @default(active)
+  photoUrl               String?
+  acceptedPaymentMethods String[]        @default(["cash", "stripe"])
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  seller User    @relation("SellerListings", fields: [sellerId], references: [id])
+  orders Order[]
+
+  @@index([sellerId])
+  @@index([status])
+  @@map("listings")
+}
+
+model Order {
+  id                         String        @id @default(uuid())
+  listingId                  String
+  buyerId                    String
+  sellerId                   String
+  quantityOrdered            Int
+  unitPriceCents             Int
+  totalAmountCents           Int
+  status                     OrderStatus   @default(pending)
+  cancelReason               CancelReason?
+  disputeReason              DisputeReason?
+  disputeNote                String?
+  paymentMethod              PaymentMethod
+  paymentStatus              PaymentStatus @default(not_applicable)
+  stripePaymentIntentId      String?
+  pickupLocation             String?
+  sellerTimeoutWarningSentAt DateTime?
+  autoCancelAt               DateTime
+  buyerCompletedAt           DateTime?
+  sellerCompletedAt          DateTime?
+  createdAt                  DateTime      @default(now())
+  updatedAt                  DateTime      @updatedAt
+
+  listing Listing  @relation(fields: [listingId], references: [id])
+  buyer   User     @relation("BuyerOrders", fields: [buyerId], references: [id])
+  seller  User     @relation("SellerOrders", fields: [sellerId], references: [id])
+  ratings Rating[]
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+  @@index([autoCancelAt])
+  @@map("orders")
+}
+
+model Rating {
+  id        String   @id @default(uuid())
+  orderId   String
+  raterId   String
+  rateeId   String
+  stars     Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+  rater User  @relation("RatingsGiven", fields: [raterId], references: [id])
+  ratee User  @relation("RatingsReceived", fields: [rateeId], references: [id])
+
+  @@unique([orderId, raterId])
+  @@index([rateeId])
+  @@map("ratings")
+}

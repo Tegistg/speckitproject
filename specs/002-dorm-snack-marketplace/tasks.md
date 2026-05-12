@@ -17,14 +17,14 @@
 
 **Purpose**: Initialize both project directories and shared tooling
 
-- [ ] T001 Create `api/` project with Node.js 20 + Fastify 4 + TypeScript 5 (`package.json`, `tsconfig.json`, `src/` structure per plan.md)
-- [ ] T002 Create `mobile/` project with Expo SDK 51 + React Native + TypeScript (`app.json`, `tsconfig.json`, `src/` structure per plan.md)
-- [ ] T003 [P] Configure ESLint + Prettier for `api/` in `api/.eslintrc.json` and `api/.prettierrc`
-- [ ] T004 [P] Configure ESLint + Prettier for `mobile/` in `mobile/.eslintrc.json` and `mobile/.prettierrc`
-- [ ] T005 Setup Prisma 5 in `api/` with Supabase PostgreSQL connection (`api/prisma/schema.prisma`, `api/src/lib/prisma.ts`)
-- [ ] T006 Setup Jest + Supertest for `api/tests/` (`api/jest.config.ts`, `api/tests/setup.ts`)
-- [ ] T007 [P] Setup Jest + React Native Testing Library for `mobile/tests/` (`mobile/jest.config.ts`, `mobile/tests/setup.ts`)
-- [ ] T008 Create `.env.example` files for `api/` and `mobile/` with all variables from `quickstart.md`
+- [x] T001 Create `api/` project with Node.js 20 + Fastify 4 + TypeScript 5 (`package.json`, `tsconfig.json`, `src/` structure per plan.md)
+- [x] T002 Create `mobile/` project with Expo SDK 51 + React Native + TypeScript (`app.json`, `tsconfig.json`, `src/` structure per plan.md)
+- [x] T003 [P] Configure ESLint + Prettier for `api/` in `api/.eslintrc.json` and `api/.prettierrc`
+- [x] T004 [P] Configure ESLint + Prettier for `mobile/` in `mobile/.eslintrc.json` and `mobile/.prettierrc`
+- [x] T005 Setup Prisma 5 in `api/` with Supabase PostgreSQL connection (`api/prisma/schema.prisma`, `api/src/lib/prisma.ts`)
+- [x] T006 Setup Jest + Supertest for `api/tests/` (`api/jest.config.ts`, `api/tests/setup.ts`)
+- [x] T007 [P] Setup Jest + React Native Testing Library for `mobile/tests/` (`mobile/jest.config.ts`, `mobile/tests/setup.ts`)
+- [x] T008 Create `.env.example` files for `api/` and `mobile/` with all variables from `quickstart.md`
 
 **Checkpoint**: Both projects scaffold, lint, and test runner execute without errors
 
@@ -36,20 +36,20 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T009 Define full Prisma schema (User, Listing, Order, Rating entities per `data-model.md`) in `api/prisma/schema.prisma`
-- [ ] T010 Run initial Prisma migration to create all tables; add GIN index on `search_vector`, B-tree indexes on `seller_id` and `status` in `api/prisma/migrations/`
-- [ ] T011 Implement Supabase Auth JWT verification middleware in `api/src/middleware/auth.ts`
-- [ ] T012 [P] Implement university email domain validation middleware (configurable domain via env) in `api/src/middleware/emailDomain.ts`
-- [ ] T013 Bootstrap Fastify server with CORS, helmet, error handler, and route registration in `api/src/server.ts` and `api/src/app.ts`
-- [ ] T014 [P] Initialize Cloudinary client singleton in `api/src/lib/cloudinary.ts`
-- [ ] T015 [P] Initialize Stripe client + Stripe Connect helpers in `api/src/lib/stripe.ts`
-- [ ] T016 [P] Initialize Expo Push Notifications client in `api/src/lib/expoPush.ts`
-- [ ] T017 Implement auth service (register with domain check, email verification, login, refresh) in `api/src/services/authService.ts`
-- [ ] T018 Implement auth routes (POST /auth/register, /auth/login, /auth/refresh, /auth/logout) per `contracts/auth.yaml` in `api/src/routes/auth.ts`
-- [ ] T019 Setup React Native app with Stack + Tab navigation and auth gate in `mobile/src/App.tsx` and `mobile/src/navigation/index.tsx`
-- [ ] T020 [P] Implement Login screen with email/password form in `mobile/src/screens/Login.tsx`
-- [ ] T021 [P] Implement Register screen with university email validation feedback in `mobile/src/screens/Register.tsx`
-- [ ] T022 Implement auth API service with JWT storage via `expo-secure-store` and token refresh logic in `mobile/src/services/authService.ts`
+- [x] T009 Define full Prisma schema (User, Listing, Order, Rating entities per `data-model.md`) in `api/prisma/schema.prisma`
+- [x] T010 Run initial Prisma migration to create all tables; add GIN index on `search_vector`, B-tree indexes on `seller_id` and `status` in `api/prisma/migrations/`
+- [x] T011 Implement Supabase Auth JWT verification middleware in `api/src/middleware/auth.ts`
+- [x] T012 [P] Implement university email domain validation middleware (configurable domain via env) in `api/src/middleware/emailDomain.ts`
+- [x] T013 Bootstrap Fastify server with CORS, helmet, error handler, and route registration in `api/src/server.ts` and `api/src/app.ts`
+- [x] T014 [P] Initialize Cloudinary client singleton in `api/src/lib/cloudinary.ts`
+- [x] T015 [P] Initialize Stripe client + Stripe Connect helpers in `api/src/lib/stripe.ts`
+- [x] T016 [P] Initialize Expo Push Notifications client in `api/src/lib/expoPush.ts`
+- [x] T017 Implement auth service (register with domain check, email verification, login, refresh) in `api/src/services/authService.ts`
+- [x] T018 Implement auth routes (POST /auth/register, /auth/login, /auth/refresh, /auth/logout) per `contracts/auth.yaml` in `api/src/routes/auth.ts`
+- [x] T019 Setup React Native app with Stack + Tab navigation and auth gate in `mobile/src/App.tsx` and `mobile/src/navigation/index.tsx`
+- [x] T020 [P] Implement Login screen with email/password form in `mobile/src/screens/Login.tsx`
+- [x] T021 [P] Implement Register screen with university email validation feedback in `mobile/src/screens/Register.tsx`
+- [x] T022 Implement auth API service with JWT storage via `expo-secure-store` and token refresh logic in `mobile/src/services/authService.ts`
 
 **Checkpoint**: Users can register (university email only), verify, log in, and receive a JWT — all other features gate on this
 
@@ -63,20 +63,20 @@
 
 ### Implementation
 
-- [ ] T023 [P] [US1] Implement `ListingService.getFeed()` (active listings, cursor pagination) in `api/src/services/listingService.ts`
-- [ ] T024 [P] [US1] Implement `ListingService.getById()` in `api/src/services/listingService.ts`
-- [ ] T025 [US1] Implement GET /listings and GET /listings/:id routes per `contracts/listings.yaml` in `api/src/routes/listings.ts`
-- [ ] T026 [P] [US1] Implement `OrderService.createOrder()` with atomic quantity decrement (`UPDATE ... WHERE quantity > 0`, HTTP 409 on conflict) in `api/src/services/orderService.ts`
-- [ ] T027 [US1] Implement POST /orders route (validates buyer ≠ seller, payment_method accepted by listing) per `contracts/orders.yaml` in `api/src/routes/orders.ts`
-- [ ] T028 [US1] Implement GET /orders/:id route (caller must be buyer or seller) in `api/src/routes/orders.ts`
-- [ ] T029 [US1] Implement `OrderService.transitionStatus()` for pending → confirmed (sets pickup_location, triggers buyer push) and pending → cancelled (seller_rejected) in `api/src/services/orderService.ts`
-- [ ] T030 [US1] Implement PATCH /orders/:id/status route (seller confirms/rejects) per `contracts/orders.yaml` in `api/src/routes/orders.ts`
-- [ ] T031 [P] [US1] Implement `ListingCard` component (title, price, photo, seller name + avg_rating) in `mobile/src/components/ListingCard.tsx`
-- [ ] T032 [P] [US1] Implement `OrderStatusBadge` component (colour-coded per status) in `mobile/src/components/OrderStatusBadge.tsx`
-- [ ] T033 [US1] Implement Feed/Home screen (paginated listing cards, pull-to-refresh) in `mobile/src/screens/Feed.tsx`
-- [ ] T034 [US1] Implement ListingDetail screen (full info, "Order" button disabled when sold out) in `mobile/src/screens/ListingDetail.tsx`
-- [ ] T035 [US1] Implement OrderConfirmation modal (payment method picker, quantity, total) in `mobile/src/screens/OrderConfirmation.tsx`
-- [ ] T036 [US1] Implement BuyerOrderStatus screen (order lifecycle display, pickup details) in `mobile/src/screens/BuyerOrderStatus.tsx`
+- [x] T023 [P] [US1] Implement `ListingService.getFeed()` (active listings, cursor pagination) in `api/src/services/listingService.ts`
+- [x] T024 [P] [US1] Implement `ListingService.getById()` in `api/src/services/listingService.ts`
+- [x] T025 [US1] Implement GET /listings and GET /listings/:id routes per `contracts/listings.yaml` in `api/src/routes/listings.ts`
+- [x] T026 [P] [US1] Implement `OrderService.createOrder()` with atomic quantity decrement (`UPDATE ... WHERE quantity > 0`, HTTP 409 on conflict) in `api/src/services/orderService.ts`
+- [x] T027 [US1] Implement POST /orders route (validates buyer ≠ seller, payment_method accepted by listing) per `contracts/orders.yaml` in `api/src/routes/orders.ts`
+- [x] T028 [US1] Implement GET /orders/:id route (caller must be buyer or seller) in `api/src/routes/orders.ts`
+- [x] T029 [US1] Implement `OrderService.transitionStatus()` for pending → confirmed (sets pickup_location, triggers buyer push) and pending → cancelled (seller_rejected) in `api/src/services/orderService.ts`
+- [x] T030 [US1] Implement PATCH /orders/:id/status route (seller confirms/rejects) per `contracts/orders.yaml` in `api/src/routes/orders.ts`
+- [x] T031 [P] [US1] Implement `ListingCard` component (title, price, photo, seller name + avg_rating) in `mobile/src/components/ListingCard.tsx`
+- [x] T032 [P] [US1] Implement `OrderStatusBadge` component (colour-coded per status) in `mobile/src/components/OrderStatusBadge.tsx`
+- [x] T033 [US1] Implement Feed/Home screen (paginated listing cards, pull-to-refresh) in `mobile/src/screens/Feed.tsx`
+- [x] T034 [US1] Implement ListingDetail screen (full info, "Order" button disabled when sold out) in `mobile/src/screens/ListingDetail.tsx`
+- [x] T035 [US1] Implement OrderConfirmation modal (payment method picker, quantity, total) in `mobile/src/screens/OrderConfirmation.tsx`
+- [x] T036 [US1] Implement BuyerOrderStatus screen (order lifecycle display, pickup details) in `mobile/src/screens/BuyerOrderStatus.tsx`
 
 **Checkpoint**: Full buy-side flow works end-to-end with seeded seller account — US1 independently testable
 
@@ -90,14 +90,14 @@
 
 ### Implementation
 
-- [ ] T037 [P] [US2] Implement `ListingService.createListing()` (validates required fields, sets status based on quantity) in `api/src/services/listingService.ts`
-- [ ] T038 [US2] Implement POST /listings route per `contracts/listings.yaml` in `api/src/routes/listings.ts`
-- [ ] T039 [P] [US2] Implement `MediaService.uploadPhoto()` (Cloudinary upload, returns URL) in `api/src/services/mediaService.ts`
-- [ ] T040 [US2] Implement POST /listings/:id/photo route (multipart upload, 5 MB limit, JPEG/PNG only) in `api/src/routes/listings.ts`
-- [ ] T041 [P] [US2] Implement CreateListing screen with form (title, description, price, quantity, category, payment methods toggle) and validation in `mobile/src/screens/CreateListing.tsx`
-- [ ] T042 [US2] Integrate `expo-image-picker` for optional photo selection + upload in `mobile/src/screens/CreateListing.tsx`
-- [ ] T043 [US2] Implement listing API service (create listing, upload photo) in `mobile/src/services/listingService.ts`
-- [ ] T044 [US2] Auto-set listing status to `sold_out` when quantity reaches 0 on create in `api/src/services/listingService.ts`
+- [x] T037 [P] [US2] Implement `ListingService.createListing()` (validates required fields, sets status based on quantity) in `api/src/services/listingService.ts`
+- [x] T038 [US2] Implement POST /listings route per `contracts/listings.yaml` in `api/src/routes/listings.ts`
+- [x] T039 [P] [US2] Implement `MediaService.uploadPhoto()` (Cloudinary upload, returns URL) in `api/src/services/mediaService.ts`
+- [x] T040 [US2] Implement POST /listings/:id/photo route (multipart upload, 5 MB limit, JPEG/PNG only) in `api/src/routes/listings.ts`
+- [x] T041 [P] [US2] Implement CreateListing screen with form (title, description, price, quantity, category, payment methods toggle) and validation in `mobile/src/screens/CreateListing.tsx`
+- [x] T042 [US2] Integrate `expo-image-picker` for optional photo selection + upload in `mobile/src/screens/CreateListing.tsx`
+- [x] T043 [US2] Implement listing API service (create listing, upload photo) in `mobile/src/services/listingService.ts`
+- [x] T044 [US2] Auto-set listing status to `sold_out` when quantity reaches 0 on create in `api/src/services/listingService.ts`
 
 **Checkpoint**: Seller can create a listing (with or without photo); it appears in the feed; sold-out listings are hidden — US2 independently testable
 
@@ -111,18 +111,18 @@
 
 ### Implementation
 
-- [ ] T045 [P] [US3] Implement `ListingService.updateListing()` and `ListingService.removeListing()` (cancels all pending orders on remove) in `api/src/services/listingService.ts`
-- [ ] T046 [US3] Implement PATCH /listings/:id and DELETE /listings/:id routes (seller-only authorization) in `api/src/routes/listings.ts`
-- [ ] T047 [US3] On listing removal, bulk-cancel all `pending` orders with `cancel_reason = listing_removed` and notify buyers via push in `api/src/services/listingService.ts`
-- [ ] T048 [P] [US3] Implement GET /users/me/orders route (role filter: buyer|seller, status filter, pagination) per `contracts/orders.yaml` in `api/src/routes/orders.ts`
-- [ ] T049 [US3] Implement confirmed → ready_for_pickup transition (seller; push buyer) in `api/src/services/orderService.ts` and `api/src/routes/orders.ts`
-- [ ] T050 [US3] Implement ready_for_pickup → completed transition (both parties confirm; triggers rating prompt push) in `api/src/services/orderService.ts`
-- [ ] T051 [US3] Implement order auto-cancel background job: warn seller push at `auto_cancel_at - 15 min`, cancel order at `auto_cancel_at` if still `pending`, void Stripe PaymentIntent if applicable in `api/src/services/orderTimeoutJob.ts`
-- [ ] T052 [P] [US3] Implement SellerDashboard screen (active listings with quantity + order count) in `mobile/src/screens/SellerDashboard.tsx`
-- [ ] T053 [P] [US3] Implement EditListing screen (update quantity, price, availability) in `mobile/src/screens/EditListing.tsx`
-- [ ] T054 [US3] Implement SellerOrderList screen (incoming orders by status) in `mobile/src/screens/SellerOrderList.tsx`
-- [ ] T055 [US3] Implement OrderActions screen (seller: confirm/reject/mark ready; buyer: cancel; both: mark done) in `mobile/src/screens/OrderActions.tsx`
-- [ ] T056 [US3] Register Expo Push Token with API on app launch in `mobile/src/services/notificationService.ts` (PATCH /users/me)
+- [x] T045 [P] [US3] Implement `ListingService.updateListing()` and `ListingService.removeListing()` (cancels all pending orders on remove) in `api/src/services/listingService.ts`
+- [x] T046 [US3] Implement PATCH /listings/:id and DELETE /listings/:id routes (seller-only authorization) in `api/src/routes/listings.ts`
+- [x] T047 [US3] On listing removal, bulk-cancel all `pending` orders with `cancel_reason = listing_removed` and notify buyers via push in `api/src/services/listingService.ts`
+- [x] T048 [P] [US3] Implement GET /users/me/orders route (role filter: buyer|seller, status filter, pagination) per `contracts/orders.yaml` in `api/src/routes/orders.ts`
+- [x] T049 [US3] Implement confirmed → ready_for_pickup transition (seller; push buyer) in `api/src/services/orderService.ts` and `api/src/routes/orders.ts`
+- [x] T050 [US3] Implement ready_for_pickup → completed transition (both parties confirm; triggers rating prompt push) in `api/src/services/orderService.ts`
+- [x] T051 [US3] Implement order auto-cancel background job: warn seller push at `auto_cancel_at - 15 min`, cancel order at `auto_cancel_at` if still `pending`, void Stripe PaymentIntent if applicable in `api/src/services/orderTimeoutJob.ts`
+- [x] T052 [P] [US3] Implement SellerDashboard screen (active listings with quantity + order count) in `mobile/src/screens/SellerDashboard.tsx`
+- [x] T053 [P] [US3] Implement EditListing screen (update quantity, price, availability) in `mobile/src/screens/EditListing.tsx`
+- [x] T054 [US3] Implement SellerOrderList screen (incoming orders by status) in `mobile/src/screens/SellerOrderList.tsx`
+- [x] T055 [US3] Implement OrderActions screen (seller: confirm/reject/mark ready; buyer: cancel; both: mark done) in `mobile/src/screens/OrderActions.tsx`
+- [x] T056 [US3] Register Expo Push Token with API on app launch in `mobile/src/services/notificationService.ts` (PATCH /users/me)
 
 **Checkpoint**: Full order lifecycle (pending → confirmed → ready → completed) and listing management work from seller dashboard — US3 independently testable
 
@@ -136,13 +136,13 @@
 
 ### Implementation
 
-- [ ] T057 [P] [US4] Add `search_vector` computed column and `tsvector` auto-update trigger on `title` + `description` to Listing in `api/prisma/migrations/`
-- [ ] T058 [P] [US4] Implement full-text keyword search (`tsvector` query) in `ListingService.getFeed()` in `api/src/services/listingService.ts`
-- [ ] T059 [US4] Add `q`, `category`, `min_price_cents`, `max_price_cents` query param handling to GET /listings in `api/src/routes/listings.ts`
-- [ ] T060 [P] [US4] Implement `SearchBar` component with debounced input in `mobile/src/components/SearchBar.tsx`
-- [ ] T061 [P] [US4] Implement `FilterPanel` component (category chips + price range slider) in `mobile/src/components/FilterPanel.tsx`
-- [ ] T062 [US4] Update Feed screen to integrate SearchBar and FilterPanel, pass params to API in `mobile/src/screens/Feed.tsx`
-- [ ] T063 [US4] Implement `EmptyState` component ("No results for…" with clear-filters action) in `mobile/src/components/EmptyState.tsx`
+- [x] T057 [P] [US4] Add `search_vector` computed column and `tsvector` auto-update trigger on `title` + `description` to Listing in `api/prisma/migrations/`
+- [x] T058 [P] [US4] Implement full-text keyword search (`tsvector` query) in `ListingService.getFeed()` in `api/src/services/listingService.ts`
+- [x] T059 [US4] Add `q`, `category`, `min_price_cents`, `max_price_cents` query param handling to GET /listings in `api/src/routes/listings.ts`
+- [x] T060 [P] [US4] Implement `SearchBar` component with debounced input in `mobile/src/components/SearchBar.tsx`
+- [x] T061 [P] [US4] Implement `FilterPanel` component (category chips + price range slider) in `mobile/src/components/FilterPanel.tsx`
+- [x] T062 [US4] Update Feed screen to integrate SearchBar and FilterPanel, pass params to API in `mobile/src/screens/Feed.tsx`
+- [x] T063 [US4] Implement `EmptyState` component ("No results for…" with clear-filters action) in `mobile/src/components/EmptyState.tsx`
 
 **Checkpoint**: Keyword + category + price filter all return correct subsets; empty state renders — US4 independently testable with 10-listing seed set
 
@@ -156,18 +156,18 @@
 
 ### Implementation
 
-- [ ] T064 [P] [US5] Implement `RatingService.submitRating()` (validates order is completed, one rating per party, `UNIQUE(order_id, rater_id)`) in `api/src/services/ratingService.ts`
-- [ ] T065 [US5] Implement POST /ratings route per `contracts/ratings.yaml` in `api/src/routes/ratings.ts`
-- [ ] T066 [P] [US5] Implement `UserService.getProfile()`, `UserService.updateProfile()`, and avg_rating recomputation trigger on new Rating in `api/src/services/userService.ts`
-- [ ] T067 [US5] Implement GET /users/me and PATCH /users/me routes per `contracts/users.yaml` in `api/src/routes/users.ts`
-- [ ] T068 [US5] Implement GET /users/:id and GET /users/:id/ratings routes in `api/src/routes/users.ts`
-- [ ] T069 [US5] Implement GET /users/:id/listings route in `api/src/routes/users.ts`
-- [ ] T070 [P] [US5] Implement `StarRating` component (interactive submit mode + read-only display mode) in `mobile/src/components/StarRating.tsx`
-- [ ] T071 [P] [US5] Implement `RatingModal` (stars + optional comment, submit button) in `mobile/src/components/RatingModal.tsx`
-- [ ] T072 [US5] Trigger `RatingModal` after both parties mark order completed in `mobile/src/screens/BuyerOrderStatus.tsx` and `mobile/src/screens/OrderActions.tsx`
-- [ ] T073 [US5] Implement UserProfile screen (avatar, avg_rating, completed_transaction_count, listings, ratings list) in `mobile/src/screens/UserProfile.tsx`
-- [ ] T074 [US5] Implement rating API service (submit, fetch user ratings) in `mobile/src/services/ratingService.ts`
-- [ ] T075 [US5] Display "No ratings yet" (not a score of 0) when `avg_rating` is null in `mobile/src/screens/UserProfile.tsx`
+- [x] T064 [P] [US5] Implement `RatingService.submitRating()` (validates order is completed, one rating per party, `UNIQUE(order_id, rater_id)`) in `api/src/services/ratingService.ts`
+- [x] T065 [US5] Implement POST /ratings route per `contracts/ratings.yaml` in `api/src/routes/ratings.ts`
+- [x] T066 [P] [US5] Implement `UserService.getProfile()`, `UserService.updateProfile()`, and avg_rating recomputation trigger on new Rating in `api/src/services/userService.ts`
+- [x] T067 [US5] Implement GET /users/me and PATCH /users/me routes per `contracts/users.yaml` in `api/src/routes/users.ts`
+- [x] T068 [US5] Implement GET /users/:id and GET /users/:id/ratings routes in `api/src/routes/users.ts`
+- [x] T069 [US5] Implement GET /users/:id/listings route in `api/src/routes/users.ts`
+- [x] T070 [P] [US5] Implement `StarRating` component (interactive submit mode + read-only display mode) in `mobile/src/components/StarRating.tsx`
+- [x] T071 [P] [US5] Implement `RatingModal` (stars + optional comment, submit button) in `mobile/src/components/RatingModal.tsx`
+- [x] T072 [US5] Trigger `RatingModal` after both parties mark order completed in `mobile/src/screens/BuyerOrderStatus.tsx` and `mobile/src/screens/OrderActions.tsx`
+- [x] T073 [US5] Implement UserProfile screen (avatar, avg_rating, completed_transaction_count, listings, ratings list) in `mobile/src/screens/UserProfile.tsx`
+- [x] T074 [US5] Implement rating API service (submit, fetch user ratings) in `mobile/src/services/ratingService.ts`
+- [x] T075 [US5] Display "No ratings yet" (not a score of 0) when `avg_rating` is null in `mobile/src/screens/UserProfile.tsx`
 
 **Checkpoint**: Both parties can rate after completion; profile shows averaged score or "No ratings yet" — US5 independently testable
 
@@ -177,16 +177,16 @@
 
 **Purpose**: Stripe payouts, dispute flow, UX hardening, seed data, and final validation
 
-- [ ] T076 [P] Implement Stripe Connect Express seller onboarding (POST /users/me/stripe/onboard returns hosted URL) in `api/src/routes/users.ts` and `api/src/services/stripeService.ts`
-- [ ] T077 [P] Implement Stripe webhook handler (PaymentIntent authorized/captured/voided/refunded events) in `api/src/routes/webhooks.ts`
-- [ ] T078 Implement order dispute transition (any non-terminal state → disputed, requires dispute_reason; pauses auto-cancel) in `api/src/services/orderService.ts` and `api/src/routes/orders.ts`
-- [ ] T079 [P] Implement avatar upload handler (POST /users/me/avatar via Cloudinary) in `api/src/routes/users.ts` and `api/src/services/mediaService.ts`
-- [ ] T080 [P] Add skeleton loading components for Feed and ListingDetail screens in `mobile/src/components/SkeletonCard.tsx`
-- [ ] T081 [P] Add `ErrorBoundary` component and network error toast handling in `mobile/src/components/ErrorBoundary.tsx`
-- [ ] T082 Verify cursor-based pagination is consistent across GET /listings and GET /users/me/orders (both use same cursor pattern)
-- [ ] T083 Create database seed file with 3 users, 10 listings, 2 completed orders with ratings, 1 pending order per `quickstart.md` in `api/prisma/seed.ts`
-- [ ] T084 [P] Add `completed_transaction_count` increment to `OrderService` when order reaches `completed` in `api/src/services/orderService.ts`
-- [ ] T085 Run full quickstart.md validation: fresh install → seed → end-to-end browse/order/confirm/complete/rate flow passes
+- [x] T076 [P] Implement Stripe Connect Express seller onboarding (POST /users/me/stripe/onboard returns hosted URL) in `api/src/routes/users.ts` and `api/src/services/stripeService.ts`
+- [x] T077 [P] Implement Stripe webhook handler (PaymentIntent authorized/captured/voided/refunded events) in `api/src/routes/webhooks.ts`
+- [x] T078 Implement order dispute transition (any non-terminal state → disputed, requires dispute_reason; pauses auto-cancel) in `api/src/services/orderService.ts` and `api/src/routes/orders.ts`
+- [x] T079 [P] Implement avatar upload handler (POST /users/me/avatar via Cloudinary) in `api/src/routes/users.ts` and `api/src/services/mediaService.ts`
+- [x] T080 [P] Add skeleton loading components for Feed and ListingDetail screens in `mobile/src/components/SkeletonCard.tsx`
+- [x] T081 [P] Add `ErrorBoundary` component and network error toast handling in `mobile/src/components/ErrorBoundary.tsx`
+- [x] T082 Verify cursor-based pagination is consistent across GET /listings and GET /users/me/orders (both use same cursor pattern)
+- [x] T083 Create database seed file with 3 users, 10 listings, 2 completed orders with ratings, 1 pending order per `quickstart.md` in `api/prisma/seed.ts`
+- [x] T084 [P] Add `completed_transaction_count` increment to `OrderService` when order reaches `completed` in `api/src/services/orderService.ts`
+- [x] T085 Run full quickstart.md validation: fresh install → seed → end-to-end browse/order/confirm/complete/rate flow passes
 
 **Checkpoint**: All 5 user stories functional, Stripe payouts wired, disputes handled, seed data loads, quickstart validated
 
