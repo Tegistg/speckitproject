@@ -1,0 +1,251 @@
+openapi: "3.1.0"
+info:
+  title: Dorm Snack Marketplace – Orders API
+  version: "1.0"
+
+paths:
+  /orders:
+    post:
+      summary: Place an order
+      description: |
+        Creates an order for a listing. Atomically decrements listing quantity.
+        For stripe payment: authorizes (does not capture) the PaymentIntent.
+        Returns HTTP 409 if the listing is sold out. FR-005, FR-006.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [listing_id, quantity_ordered, payment_method]
+              properties:
+                listing_id:
+                  type: string
+                  format: uuid
+                quantity_ordered:
+                  type: integer
+                  minimum: 1
+                payment_method:
+                  type: string
+                  enum: [cash, stripe]
+                stripe_payment_method_id:
+                  type: string
+                  description: Required when payment_method = stripe
+      responses:
+        "201":
+          description: Order placed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "409":
+          description: Listing sold out or insufficient quantity
+        "422":
+          description: |
+            Validation error:
+            - buyer cannot purchase their own listing
+            - payment_method not accepted by seller
+            - stripe_payment_method_id missing when payment_method = stripe
+
+  /orders/{id}:
+    get:
+      summary: Get order detail
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "403":
+          description: Caller is neither buyer nor seller for this order
+        "404":
+          description: Order not found
+
+  /orders/{id}/status:
+    patch:
+      summary: Transition order status
+      description: |
+        Allowed transitions by role:
+        - Seller: pending → confirmed (with optional pickup_location)
+        - Seller: pending → cancelled (cancel_reason = seller_rejected)
+        - Seller: confirmed → ready_for_pickup
+        - Buyer: pending|confirmed → cancelled (until ready_for_pickup)
+        - Both: ready_for_pickup → completed (both must call; order completes when both confirm)
+        - Either: any non-terminal state → disputed (requires dispute_reason)
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [confirmed, ready_for_pickup, completed, cancelled, disputed]
+                pickup_location:
+                  type: string
+                  description: Required when seller transitions to confirmed
+                cancel_reason:
+                  type: string
+                  enum: [buyer_changed_mind, buyer_unavailable, seller_rejected, other]
+                dispute_reason:
+                  type: string
+                  enum: [item_not_received, item_not_as_described, no_show_buyer, no_show_seller, other]
+                dispute_note:
+                  type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "403":
+          description: Caller not permitted to make this transition
+        "409":
+          description: Transition not valid from current status
+        "422":
+          description: Missing required field for transition (e.g., dispute_reason for disputed)
+
+  /users/me/orders:
+    get:
+      summary: List my orders (as buyer or seller)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [buyer, seller]
+          description: Filter by role. Omit to return both.
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, confirmed, ready_for_pickup, completed, cancelled, disputed]
+        - name: cursor
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 50
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrderSummary"
+                  next_cursor:
+                    type: string
+                    nullable: true
+
+components:
+  schemas:
+    OrderSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        listing:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            title:
+              type: string
+            photo_url:
+              type: string
+              nullable: true
+        status:
+          type: string
+        payment_method:
+          type: string
+        total_amount_cents:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    Order:
+      allOf:
+        - $ref: "#/components/schemas/OrderSummary"
+        - type: object
+          properties:
+            buyer:
+              $ref: "#/components/schemas/UserRef"
+            seller:
+              $ref: "#/components/schemas/UserRef"
+            quantity_ordered:
+              type: integer
+            unit_price_cents:
+              type: integer
+            payment_status:
+              type: string
+              enum: [not_applicable, authorized, captured, refunded, voided]
+            pickup_location:
+              type: string
+              nullable: true
+            cancel_reason:
+              type: string
+              nullable: true
+            dispute_reason:
+              type: string
+              nullable: true
+            dispute_note:
+              type: string
+              nullable: true
+            auto_cancel_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+    UserRef:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        avg_rating:
+          type: number
+          nullable: true
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
